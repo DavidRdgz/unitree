@@ -53,6 +53,24 @@ get.branch.Tree <- function (t, n, ...) {
     }
 }
 
+get.leaves <- function (t) {
+    leaves <- c()
+    for (node in t$tree) {
+        if (node$l.id == 0 && node$r.id == 0) {
+            leaves <- c(leaves, node)
+        }
+    }
+    leaves
+}
+
+get.parent <- function (t, id) {
+    for (node in t$tree) {
+        if (node$l.id == id || node$r.id == id) {
+            return(node)
+        }
+    }
+}
+
 predict <- function(t, X, ...) UseMethod("predict")
 predict.Tree <- function(t, X, ...) {
     predictions <- c()
@@ -79,10 +97,10 @@ bag <- function (X, Y, n = 300, ...) {
 }
 
 get.children <- function (X, Y, subset, ...) {
-    RX <- X[subset,]
-    RY <- Y[subset]
-    LX <- X[!subset,]
-    LY <- Y[!subset]
+    RX <- droplevels(X[subset,])
+    RY <- droplevels(Y[subset])
+    LX <- droplevels(X[!subset,])
+    LY <- droplevels(Y[!subset])
     list( "Right" = list(X = RX, Y = RY), "Left" = list( X = LX, Y = LY))
 }
 
@@ -92,7 +110,11 @@ push.children <- function (q, id, children, ...) {
     q
 }
 
-tree <- function(X, Y, Thresh = Gauss, Pure =Twoing, is.forest = FALSE, splitter =Split, ...) {
+is.impure <- function (Y, ...) {
+    length(names(table(Y))) > 1
+}
+
+tree <- function(X, Y, Thresh =Brute, Pure =Info, is.forest = FALSE, splitter =Split, ...) {
     args <- mget(names(formals()),sys.frame(sys.nframe()))[-c(1,2)]
 
     if (isTRUE(is.forest)) {
@@ -108,7 +130,7 @@ tree <- function(X, Y, Thresh = Gauss, Pure =Twoing, is.forest = FALSE, splitter
         XY <- q[[1]]; q <- q[-1]
         s  <- do.call(splitter, c(XY, args))
 
-        if (s[["gain"]] > .05) {
+        if (is.impure(XY[["Y"]])) {
             subset   <- s[["candidates"]]
             children <- do.call(get.children, c(XY, list(subset)))
             q        <- push.children(q, id, children)
