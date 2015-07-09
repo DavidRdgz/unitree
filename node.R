@@ -36,13 +36,8 @@ get.Gain <- function (Pure, Y, Rcandidates, ...) {
 }
 
 get.GainRatio <- function (gain, Rcandidates) {
-        p <- sum(Rcandidates)/length(Rcandidates)
-
-        if (potential) {
-            return(gain/Potential(p))
-        } else {
-            return(gain)
-        }
+    p <- sum(Rcandidates)/length(Rcandidates)
+    gain/Potential(p)
 }
 
 load <- function (col, Rcandidates, gain, cutoff, ...) {
@@ -62,7 +57,7 @@ ImpurityMeasures <- function (LiRi, X, Y, Pure, ...) {
             Rcandidates <- X[,col] > cutoff
             gain        <- do.call(get.Gain, list(Pure, Y, Rcandidates))
 
-            if (is.finite(gain) && gain > col.score) {
+            if (is.finite(gain) && gain >= col.score) {
                 tmp.measures <- load(col, Rcandidates, gain, cutoff)
                 col.score <- gain
             }
@@ -162,3 +157,7 @@ MajClasses <- function (C,Y, ...) {
     C[["candidates"]] <- Y %in% CR
     C
 }
+
+
+(dt$tree[[2]]$X[,dt$tree[[2]]$col] > dt$tree[[2]]$cutoff) == dt$tree[[2]]$candidates
+
