@@ -129,14 +129,14 @@ Split <- function (X, Y, Thresh, Pure, is.forest, ...) {
     TopBinary(C)
 }
 
-Branch <- function (X, Y, Thresh, Pure, is.forest, ...) {
+Branch <- function (X, Y, Thresh, Pure, ...) {
 
-    if (isTRUE(is.forest)) {
-        Xid <- twig(X)
-    }
+    Xid <- twig(X)
+    X <- Xid[["X"]]
+    col <- Xid[["col"]]
 
-    LiRi <- BinarySplits(list(Xid[["X"]]), Gauss)
-    do.call(ImpurityMeasures2, c(LiRi, Xid, Y, Pure))
+    LiRi <- unlist(BinarySplits(list(X), Thresh))
+    ImpurityMeasures2(LiRi, col, X, Y, Pure)
 }
 
 MajClasses <- function (C,Y, ...) {
