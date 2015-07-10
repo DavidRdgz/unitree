@@ -18,7 +18,6 @@ Node <- function (id, X, Y, label, col= 0, cutoff= 0, l.id = 0, r.id = 0, candid
     return(data)
 }
 
-# implementation
 BinarySplits <- function (X, Thresh, ...) {
     lapply(X, Thresh)
 }
@@ -44,7 +43,6 @@ load <- function (col, Rcandidates, gain, cutoff, ...) {
     list("col" = col, "candidates" = Rcandidates, "gain" = gain, "cutoff" = cutoff)
 }
 
-# Given BinarySplits univariate, then ImpurityMeasures
 ImpurityMeasures <- function (LiRi, X, Y, Pure, ...) {
     measures <- list()
     
@@ -157,7 +155,4 @@ MajClasses <- function (C,Y, ...) {
     C[["candidates"]] <- Y %in% CR
     C
 }
-
-
-(dt$tree[[2]]$X[,dt$tree[[2]]$col] > dt$tree[[2]]$cutoff) == dt$tree[[2]]$candidates
 
