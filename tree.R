@@ -1,8 +1,9 @@
 source("node.R")
 
-Tree <- function () {
+Tree <- function (args = 0) {
     data <- list(
-                 tree = list()
+                 tree = list(),
+                 call = args
                 )
     class(data) <- append(class(data), "Tree")
     return(data)
@@ -82,7 +83,12 @@ predict.Tree <- function(t, X, ...) {
         node <- get.branch(t, 1)
 
         while (node$r.id != 0 && node$l.id != 0) {
-            go.right <- X[iter, node$col] > node$cutoff
+            if (identical(t$call$splitter, Branch)) {
+                go.right <- sum(X[iter, node$col]) > node$cutoff
+            } else {
+                go.right <- X[iter, node$col] > node$cutoff
+            }
+
             if (go.right) {
                 node <- get.branch(t, node$r.id)
             } else {
@@ -94,7 +100,7 @@ predict.Tree <- function(t, X, ...) {
     predictions
 }
 
-bag <- function (X, Y, n = 300, ...) {
+bag <- function (X, Y, n = 200, ...) {
     s <- length(Y)
     sub <- sample(1:s, n, replace = TRUE)
     list(X = X[sub,], Y = Y[sub])
@@ -118,6 +124,19 @@ is.impure <- function (Y, ...) {
     length(names(table(Y))) > 1
 }
 
+no.children <- function (t, XY, s, ...) {
+    payload <- nochildren.payload(XY, s)
+    n       <- do.call(Node, payload)
+    t       <- grow.tree(t, n)
+}
+
+yes.children <- function (t, XY, s, id, ...) {
+    payload  <- children.payload(XY, s, id)
+    n        <- do.call(Node, payload)
+    t        <- grow.tree(t, n)
+    t
+}
+
 tree <- function(X, Y, Thresh = Gauss, Pure =Gini, is.forest = FALSE, splitter =Split, ...) {
     args <- mget(names(formals()),sys.frame(sys.nframe()))[-c(1,2)]
 
@@ -128,28 +147,23 @@ tree <- function(X, Y, Thresh = Gauss, Pure =Gini, is.forest = FALSE, splitter =
 
     id <- 1
     q  <- do.call(setup.queue, list(id, X, Y))
-    t  <- Tree()
+    t  <- Tree(args)
 
     while(length(q) > 0) {
         XY <- q[[1]]; q <- q[-1]
-        s  <- do.call(splitter, c(XY, args))
-        
-        if (is.impure(XY[["Y"]])) {
-            subset   <- s[["candidates"]]
+
+        s      <- do.call(splitter, c(XY, args))
+        subset <- s[["candidates"]]
+
+        if (is.null(subset) || !is.impure(XY[["Y"]])) {
+            t        <- no.children(t, XY, s)
+        } else {
             children <- do.call(get.children, c(XY, list(subset = subset)))
             q        <- push.children(q, id, children)
 
-
-            payload  <- children.payload(XY, s, id)
-            n        <- do.call(Node, payload)
-            t        <- grow.tree(t, n)
-
+            t        <- yes.children(t, XY, s, id)
             id <- id + 2
-        } else {
-            payload <- nochildren.payload(XY, s)
-            n       <- do.call(Node, payload)
-            t       <- grow.tree(t, n)
-        }
+        } 
     }
     t
 }
