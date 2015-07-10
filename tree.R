@@ -29,8 +29,8 @@ push.queue <- function (q, id, X, Y, ...) {
     q
 }
 
-children.payload <- function (XY, s, ...) {
-     children <- list(r.id = XY[["id"]] + 1 , l.id = XY[["id"]] + 2)
+children.payload <- function (XY, s, id,  ...) {
+     children <- list(r.id = id + 1 , l.id = id + 2)
      c(XY, s, children)
 }
 
@@ -53,14 +53,18 @@ get.branch.Tree <- function (t, n, ...) {
     }
 }
 
-get.leaves <- function (t) {
-    leaves <- c()
+get.leaves <- function (t, ...) {
+    leaves <- list()
     for (node in t$tree) {
         if (node$l.id == 0 && node$r.id == 0) {
-            leaves <- c(leaves, node)
+            leaves[[length(leaves) + 1 ]] <- node
         }
     }
     leaves
+}
+
+is.leaf <- function (n, ...) {
+    n$l.id == 0
 }
 
 get.parent <- function (t, id) {
@@ -104,9 +108,9 @@ get.children <- function (X, Y, subset, ...) {
     list( "Right" = list(X = RX, Y = RY), "Left" = list( X = LX, Y = LY))
 }
 
-push.children <- function (q, id, children, ...) {
-    q <- do.call(push.queue, c(list(q, id = id+1), children[["Right"]]))
-    q <- do.call(push.queue, c(list(q, id = id+2), children[["Left"]]))
+push.children <- function (q, n.id, children, ...) {
+    q <- do.call(push.queue, c(list(q = q, id = n.id+1), children[["Right"]]))
+    q <- do.call(push.queue, c(list(q = q, id = n.id+2), children[["Left"]]))
     q
 }
 
@@ -114,7 +118,7 @@ is.impure <- function (Y, ...) {
     length(names(table(Y))) > 1
 }
 
-tree <- function(X, Y, Thresh =Brute, Pure =Info, is.forest = FALSE, splitter =Split, ...) {
+tree <- function(X, Y, Thresh = Gauss, Pure =Gini, is.forest = FALSE, splitter =Split, ...) {
     args <- mget(names(formals()),sys.frame(sys.nframe()))[-c(1,2)]
 
     if (isTRUE(is.forest)) {
@@ -129,13 +133,14 @@ tree <- function(X, Y, Thresh =Brute, Pure =Info, is.forest = FALSE, splitter =S
     while(length(q) > 0) {
         XY <- q[[1]]; q <- q[-1]
         s  <- do.call(splitter, c(XY, args))
-
+        
         if (is.impure(XY[["Y"]])) {
             subset   <- s[["candidates"]]
-            children <- do.call(get.children, c(XY, list(subset)))
+            children <- do.call(get.children, c(XY, list(subset = subset)))
             q        <- push.children(q, id, children)
 
-            payload  <- children.payload(XY, s)
+
+            payload  <- children.payload(XY, s, id)
             n        <- do.call(Node, payload)
             t        <- grow.tree(t, n)
 
