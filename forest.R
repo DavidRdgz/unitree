@@ -9,7 +9,6 @@ Forest <- function () {
 }
 
 add.Tree <- function (f, t, ...) {
-
     f$forest[[length(f$forest) + 1]] <- t
     f
 }
@@ -30,11 +29,12 @@ rf.predict <- function (f, X, ...) {
     pred
 }
 
-forest <- function (X, Y, n, grow = TRUE, ...) {
+forest <- function (X, Y, n, grow = TRUE, splitter = Branch, ...) {
     f <- Forest()
 
     for (i in 1:n) {
-        t <- tree(X,Y, is.forest = grow)
+        print(i)
+        t <- tree(X,Y, thresh = KTile, is.forest = grow, splitter = splitter)
         f <- add.Tree(f, t)
     }
     f

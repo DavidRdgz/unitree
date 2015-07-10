@@ -34,9 +34,13 @@ graph.value <- function (dt, ...) {
     data.frame(graph(dt)-1, value = rep(1,nrow(graph(dt))))
 }
 
-simpleNetwork(graph(dt))
+simple.graph <- function (dt, ...) {
+    simpleNetwork(graph(dt))
+}
 
-forceNetwork(Links = graph.value(dt), Nodes = get.labels(dt),
-             Source = "Source", Target = "Target", Value = "value",
-             NodeID = "names", Group = "group", opacity = .8, 
-             legend = TRUE, zoom = TRUE, fontSize = 10)
+force.graph <- function (dt, ...) {
+    forceNetwork(Links = graph.value(dt), Nodes = get.labels(dt),
+                Source = "Source", Target = "Target", Value = "value",
+                NodeID = "names", Group = "group", opacity = .8, 
+                legend = TRUE, zoom = TRUE, fontSize = 10)
+}
