@@ -19,9 +19,10 @@ approximation techniques.
 
 This package include a D3 graphic capability known as a _force-graph_. For instance a sample decision tree produced from this package on the iris data set looks like this,
 
-
 ![alt text](images/irisTree.gif)
 
+# Desired Features
+Currently this package does not support, but we hope to implement in the future.
 
-
+1. Pruning Methods
 
