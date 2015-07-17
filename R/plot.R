@@ -13,7 +13,7 @@ rep.parent <- function (parent, children, ...) {
 get.labels <- function (dt, ...) {
     names<- c()
     for (node in dt$tree) {
-        names <- c(names, paste(node$id, "-", node$col,"-",  round(node$cutoff)))
+        names <- c(names, paste(node$id, "-", node$col,"-",  round(node$cutoff, 3)))
     }
     data.frame(names, group = 1:length(names), size = rep(1,length(names)))
 }

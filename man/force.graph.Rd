@@ -22,7 +22,7 @@ This function builds a D3 javascript object to view and analyze a \code{unitree}
 Y  <- iris[,5]
 X  <- iris[,1:4]
 dt <- unitree(X, Y)
-print(force.graph(dt))
+force.graph(dt)
 }
 \author{
 David Rodriguez

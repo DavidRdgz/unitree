@@ -1,10 +1,11 @@
 Package: unitree
 Type: Package
-Title: What the Package Does (Title Case)
+Title: A univariate tree and random forest for real-valued vectors needing classificatio
 Version: 0.1
 Date: 2015-07-16
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: David Rodriguez
+Maintainer: David Rodriguez <davidqed@gmai.com>
+Description: This univariate decision tree is optimized with Gaussian, K-Tile, and Uniform, attribute approximation methods. In addition, random forest options.
 License: What license is it under?
 LazyData: TRUE
+Depends: networkD3
