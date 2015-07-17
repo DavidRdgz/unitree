@@ -54,6 +54,7 @@ force.graph(dt)
 
 ![alt text](images/irisTree.gif)
 
+This decision tree provides the id of the node, the column from `X` which was used to split, and the splitting value.
 
 # Why
 This package is intended for those trying to classifying signals from sensors. In particular, this package gives the capability to make
