@@ -1,5 +1,5 @@
 # decision-tree
-A decision tree calssifier for use on vectors of real-values.
+A decision tree calssifier for use on vectors of real-values. This tree using an approximation technique to find the best splitting points for continuous values using either Gaussian, K-Tile, or Uniform approximation techniques.
 
 # Usage
 
