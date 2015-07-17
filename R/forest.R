@@ -17,12 +17,34 @@ top.pred <- function (tmp.pred, ...) {
     names(sort(table(tmp.pred)))[[1]]
 }
 
+#' Predicting classes from a random forest generated from \code{unitree} objects.
+#'
+#' This function predict classes from a dataframe 'x' to classes 'y' based on a \code{uniforest} object.
+#'
+#' @param t is a tree from fitted by \code{uniforest}: from an ensemble of \code{unitree}s.
+#' @param X is a dataframe with the same columns fitting 't'.
+#'
+#' @return a vector of class labels for each row from 'x'
+#'
+#' @author David Rodriguez
+#' @details
+#' This function provides class predictions from a dataframe 'x' based on a \code{uniforest} object. This prediction function traverses all the trees until reaching a leaf node for each tree. The majority vote determines the returned label.
+#'
+#' @seealso \code{uniforest, unitree, u.predict}
+#' @examples
+#' Y  <- iris[,5]
+#' X  <- iris[,1:4]
+#' dt <- uniforest(X, Y, 10)
+#' p  <- rf.predict(dt, X)
+#' table(pred = p, actu = Y)
+
+
 rf.predict <- function (f, X, ...) {
     pred <- c()
     for (row in 1:nrow(X)){
         tmp.pred <- c()
         for (t in f$forest) {
-            tmp.pred <- c(tmp.pred, t.predict(t, X[row,]))
+            tmp.pred <- c(tmp.pred, u.predict(t, X[row,]))
         }
     pred <- c(pred, top.pred(tmp.pred))
     }
