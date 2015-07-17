@@ -3,11 +3,17 @@ A decision tree calssifier for use on vectors of real-values.
 
 # Usage
 
+Below are some quick steps to get this package loaded.
+
+### Install
+
 Just install the package using the `devtools` package in `R`.
 
 ```
 devtools::install_github("davidrdgz/unitree")
 ```
+
+### Training
 
 Then you can go ahead and run a quick test on the iris data set as follows,
 
@@ -18,7 +24,11 @@ dt <- unitree(X, Y)
 ```
 
 That should fit out univariate decision tree. In this case we have constructed
-a tree with Gaussian threshing and impurity measure using information criteria. Now we can make some silly predictions (silly because we fit the tree with this data),
+a tree with Gaussian threshing and impurity measure using information criteria. 
+
+### Testing
+
+Now we can make some silly predictions (silly because we fit the tree with this data),
 
 ```
 > p  <- u.predict(dt, X)
@@ -31,7 +41,12 @@ versicolor      0         50         0
 virginica       0          0        50
 ```
 
-So we see that our univariate decision tree classifies the iris data set. Further, we can take a look at our tree,
+So we see that our univariate decision tree classifies the iris data set. 
+
+
+### Plotting
+
+Further, we can take a look at our tree,
 
 ![alt text](images/irisTree.gif)
 
