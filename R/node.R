@@ -1,5 +1,5 @@
-source("purity.R")
-source("thresh.R")
+source("R/purity.R")
+source("R/thresh.R")
 
 Node <- function (id, X, Y, label, col= 0, cutoff= 0, l.id = 0, r.id = 0, candidates = 0, gain = 0) {
     data <- list(
@@ -39,13 +39,13 @@ get.GainRatio <- function (gain, Rcandidates) {
     gain/Potential(p)
 }
 
-load <- function (col, Rcandidates, gain, cutoff, ...) {
+a.load <- function (col, Rcandidates, gain, cutoff, ...) {
     list("col" = col, "candidates" = Rcandidates, "gain" = gain, "cutoff" = cutoff)
 }
 
 ImpurityMeasures <- function (LiRi, X, Y, Pure, ...) {
     measures <- list()
-    
+
     for (col in seq_along(X)) {
         col.score      <- 0
         tmp.measures   <- list()
@@ -56,7 +56,7 @@ ImpurityMeasures <- function (LiRi, X, Y, Pure, ...) {
             gain        <- do.call(get.Gain, list(Pure, Y, Rcandidates))
 
             if (is.finite(gain) && gain >= col.score) {
-                tmp.measures <- load(col, Rcandidates, gain, cutoff)
+                tmp.measures <- a.load(col, Rcandidates, gain, cutoff)
                 col.score <- gain
             }
         }
@@ -77,7 +77,7 @@ ImpurityMeasures2 <- function (LiRi, col,  X, Y, Pure, ...) {
         gain        <- do.call(get.Gain, list(Pure, Y, Rcandidates))
 
         if (is.finite(gain) && gain > col.score) {
-            measures <- load(col, Rcandidates, gain, cutoff)
+            measures <- a.load(col, Rcandidates, gain, cutoff)
             col.score <- gain
         }
     }
@@ -89,7 +89,7 @@ TopBinary <- function (measures, ...) {
     for (i in measures) {
         if (i[["gain"]] > max[["gain"]]) {
             max <- i
-        } 
+        }
     }
     max
 }
@@ -123,7 +123,7 @@ Split <- function (X, Y, Thresh, Pure, is.forest, ...) {
     if (isTRUE(is.forest)) {
         X <- swig(X)
     }
-    
+
     LiRi <- BinarySplits(X, Thresh)
     C    <- ImpurityMeasures(LiRi, X, Y, Pure)
     TopBinary(C)

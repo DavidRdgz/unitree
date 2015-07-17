@@ -1,5 +1,6 @@
-source("tree.R")
-library(networkD3)
+require(networkD3)
+source("R/tree.R")
+
 
 get.children.id <- function (node, ...) {
     c(node$l.id, node$r.id)
@@ -23,7 +24,7 @@ graph <- function (dt, ...) {
     Target <- c()
     for (node in dt$tree) {
         if (!is.leaf(node)) {
-            Source <- c(Source, rep(node$id, 2)) 
+            Source <- c(Source, rep(node$id, 2))
             Target <- c(Target, get.children.id(node))
         }
     }
@@ -38,9 +39,27 @@ simple.graph <- function (dt, ...) {
     simpleNetwork(graph(dt))
 }
 
+#' A D3 graph of a \code{unitree} decision tree
+#'
+#' This function provides an interactive interface to analyze a \code{unitree} object.
+#'
+#' @param dt is \code{unitree} fitted object.
+#' @return an interactive D3 tree object with labels.
+#' @author David Rodriguez
+#' @details
+#' This function builds a D3 javascript object to view and analyze a \code{unitree} object. Presently there are no options to alter labels.
+#'
+#' @seealso \code{networkD3}
+#'
+#' @examples
+#' Y  <- iris[,5]
+#' X  <- iris[,1:4]
+#' dt <- unitree(X, Y)
+#' force.graph(dt)
+
 force.graph <- function (dt, ...) {
-    forceNetwork(Links = graph.value(dt), Nodes = get.labels(dt),
+    networkD3::forceNetwork(Links = graph.value(dt), Nodes = get.labels(dt),
                 Source = "Source", Target = "Target", Value = "value",
-                NodeID = "names", Group = "group", opacity = .8, 
+                NodeID = "names", Group = "group", opacity = .8,
                 legend = TRUE, zoom = TRUE, fontSize = 10)
 }

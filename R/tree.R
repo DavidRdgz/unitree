@@ -1,4 +1,4 @@
-source("node.R")
+source("R/node.R")
 
 Tree <- function (args = 0) {
     data <- list(
@@ -64,7 +64,7 @@ get.leaves <- function (t, ...) {
     leaves
 }
 
-is.leaf <- function (n, ...) {
+is.a.leaf <- function (n, ...) {
     n$l.id == 0
 }
 
@@ -76,8 +76,28 @@ get.parent <- function (t, id) {
     }
 }
 
-predict <- function(t, X, ...) UseMethod("predict")
-predict.Tree <- function(t, X, ...) {
+#' Predicting classes from a univariate decision tree
+#'
+#' This function predict classes from a dataframe 'x' to classes 'y' based on a \code{unitree} object.
+#'
+#' @param t is a tree from fitted by \code{unitree}
+#' @param X is a dataframe with the same columns fitting 't'.
+#'
+#' @return a vector of class labels for each row from 'x'
+#'
+#' @author David Rodriguez
+#' @details
+#' This function provides class predictions from a dataframe 'x' based on a \code{unitree} object. This prediction function traverses the tree until reaching a leaf node where the label is returned.
+#'
+#' @seealso \code{unitree, u.predict}
+#' @examples
+#' Y  <- iris[,5]
+#' X  <- iris[,1:4]
+#' dt <- unitree(X, Y)
+#' p  <- u.predict(dt, X)
+#' table(pred = p, actu = Y)
+
+u.predict <- function(t, X, ...) {
     predictions <- c()
     for (iter in seq_along(1:nrow(X))) {
         node <- get.branch(t, 1)
@@ -137,7 +157,29 @@ yes.children <- function (t, XY, s, id, ...) {
     t
 }
 
-tree <- function(X, Y, Thresh = Gauss, Pure =Gini, is.forest = FALSE, splitter =Split, ...) {
+#' A decision tree and random forest classifier
+#'
+#' A function to construct a univariate decision tree classifier or random forest.
+#'
+#' @param X dataframe of real-values (does not contain missing values).
+#' @param Y a vector of class set as factors.
+#' @param Thresh Either: Gauss, KTile, Uniform, Brute. Approximation splitting techniques.
+#' @param Pure Either: Gini, Info, Twoing. Funcitons to calculate impurity at a given node.
+#' @param is.forest If \code{TRUE} then either bagging or random selection of columns of \code{X}.
+#' @param splitter Either: Split or Branch. If split, then traditional univariate decision tree. If branch, then random forest, and potential sum of attributes.
+#'
+#' @return a \code{tree} object consisting of nodes.
+#' @author David Rodriguez
+#' @details This function fits a decision tree with the above options. It is therefore, a potentially, exhaustive approach to fitting and selecting a decision tree.
+#'
+#' @seealso \code{u.predict, force.graph}
+#'
+#' @examples
+#' X <- iris[,1:4]
+#' Y <- iris[,5]
+#' dt <- unitree(X, Y)
+
+unitree <- function(X, Y, Thresh = Gauss, Pure =Info, is.forest = FALSE, splitter =Split, ...) {
     args <- mget(names(formals()),sys.frame(sys.nframe()))[-c(1,2)]
 
     if (isTRUE(is.forest)) {
@@ -163,7 +205,7 @@ tree <- function(X, Y, Thresh = Gauss, Pure =Gini, is.forest = FALSE, splitter =
 
             t        <- yes.children(t, XY, s, id)
             id <- id + 2
-        } 
+        }
     }
     t
 }

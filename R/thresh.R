@@ -1,9 +1,9 @@
-source("quickselect.R")
+source("R/quickselect.R")
 
 Gauss <- function (vector, k = 30, ...) {
     mu <- mean(vector)
     s  <- sd(vector)
-    
+
     tmp <- c()
     for (i in seq_along(1:k)) {
         tmp <- c(tmp, mu + s * pnorm(i/(k+1)))
@@ -23,7 +23,7 @@ KTile <- function (vector, k = 30, ...) {
 Uniform <- function (vector, k = 30, ...) {
     a.min <- min(vector)
     a.max <- max(vector)
-    
+
     tmp <- c()
     for (i in seq_along(1:k)) {
         tmp <- c(tmp, a.min + i * (a.max - a.min)/(k+1))
