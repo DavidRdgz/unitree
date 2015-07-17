@@ -48,6 +48,10 @@ So we see that our univariate decision tree classifies the iris data set.
 
 Further, we can take a look at our tree,
 
+```
+force.graph(dt)
+```
+
 ![alt text](images/irisTree.gif)
 
 
