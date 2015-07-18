@@ -73,7 +73,7 @@ approximation techniques.
 
 # Plot
 
-This package include a D3 graphic capability known as a _force-graph_. This graph has labels identifying the node id, the column from `x` used to split the node and the `label` of the node and percent of the node with the given label.
+This package include a D3 graphic capability known as a _force-graph_. This graph has labels identifying the node id, the column from `x` used to split the node and the `label` of the node.
 
 
 
