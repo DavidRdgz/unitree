@@ -1,6 +1,6 @@
 # unitree
 
-A decision tree calssifier for use on vectors of real-values. This tree provides an approximation technique to find the best splitting points for continuous values using either Gaussian, K-Tile, or Uniform approximation techniques.
+A decision tree calssifier for use on vectors of real-values. In other words, financial or sensor data needing classification. This tree provides an approximation technique to find the best splitting points for continuous values using either Gaussian, K-Tile, or Uniform approximation techniques.
 
 # Usage
 
@@ -25,7 +25,7 @@ dt <- unitree(X, Y)
 ```
 
 That should fit out univariate decision tree. In this case we have constructed
-a tree with Gaussian threshing and impurity measure using information criteria. 
+a tree with Gaussian threshing and impurity measure using information criteria. The variety of options can be toggled by typing `?unitree`. 
 
 ### Testing
 
@@ -42,7 +42,7 @@ versicolor      0         50         0
 virginica       0          0        50
 ```
 
-So we see that our univariate decision tree classifies the iris data set. 
+So we see that our univariate decision tree classifies the iris data set. This perfect classification occurs because the decision tree is produced using a greedy approach: split a node until it is pure. 
 
 
 ### Plotting
