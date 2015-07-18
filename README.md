@@ -1,4 +1,5 @@
-# decision-tree
+# unitree
+
 A decision tree calssifier for use on vectors of real-values. This tree provides an approximation technique to find the best splitting points for continuous values using either Gaussian, K-Tile, or Uniform approximation techniques.
 
 # Usage
